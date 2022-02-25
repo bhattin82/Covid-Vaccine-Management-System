@@ -49,7 +49,7 @@ void free_memory(Node *);
 The main function calls the access_system function.
 If the access_system function returns 0, then the read_listfile function is called.
 The program calls the selection function that prints the user options.
-However, if the access system returns 1, the user has to wait for some time before another login attempt.
+However, if the access system returns 1, the user has to wait for some time before the access_system function is called again.
 */
 
 int main(int argc,char ** argv){
