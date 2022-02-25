@@ -52,6 +52,7 @@ The program calls the selection function that prints the user options.
 However, if the access system returns 1, the user has to wait for some time before the access_system function is called again.
 */
 
+
 int main(int argc,char ** argv){
 
     Node *individual=NULL;
@@ -80,6 +81,7 @@ If the correct credentials are entered, then the user is granted access (EXIT_SU
 If not, then the user is given three attempts for a successful login.
 If all three attempts are unsuccessful, the program returns EXIT_FAILURE to the main function
 */
+
 
 bool access_system(){
 
@@ -116,7 +118,6 @@ return EXIT_FAILURE;
 }
 
 // This function uses a for loop to create a time delay for 5 seconds after 3 unsuccessful login attempts. 
-
 void time_delay(int secs){
   printf("\nPlease wait for a few seconds\n");
   for (int delay=0; delay<5;delay++){
@@ -124,6 +125,19 @@ void time_delay(int secs){
     printf("%d seconds\n",delay+1);
   }
 }
+
+
+/*
+This function opens the file in read mode.
+If the file is empty, we return NULL.
+A while loop is used to iterate until the end of file (feof).
+The data is read from the file (fscanf) using the file pointer.
+Memory is allocated (malloc) for each Node.
+The data (name, gender, age, phone number, id number, vaccine) is stored in the linked list for each node.
+Next, we create the linked list by linking all the nodes (e.g. A->B->C->D->E->NULL)
+The file is closed. 
+The head node is returned.
+*/
 
 
 Node *read_listfile(char *filename){
@@ -161,6 +175,16 @@ Node *read_listfile(char *filename){
 fclose(file_pointer);
 return head_node;
 }
+
+
+/*
+This function requires the user to enter an option.
+The following operations can be performed:
+1.Current Database 2.Add Record 3.Delete Record 4.Update Record 5.Search Record 6.Priority Individuals (Not vaccinated) 7.Log Out
+Then, the relevant functions are called. 
+If there is some error, this function will display that too.
+This function recursively calls itself until the user logs out.
+*/
 
 
 bool selection(Node *person, char *filename, char *filename2){
@@ -261,7 +285,15 @@ bool selection(Node *person, char *filename, char *filename2){
 }
 return EXIT_FAILURE;
 }
-  
+
+
+/*
+This function displays the current database.
+It uses a while loop to traverse the linked list (terminates when reaches last node that has a null pointer).
+It prints the information (name, gender, age, phone number, id number, vaccine) for each node in the current linked list.
+The print statement uses width modifiers to arrange the data in an organized manner.
+*/
+
 
 void display_currentdata(Node *person){
  printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n"); 
@@ -271,6 +303,17 @@ void display_currentdata(Node *person){
   }
 free(person);
 }
+
+
+/*
+This function inserts a new node in the linked list, and it requires user interaction.
+It asks the user for a name, gender, age, phone number, id_number and vaccine. 
+The check_length function is called that checks if the phone number and id number are in the specified range (10 digits each). 
+Memory is allocated (malloc) for the new node in the linked list.
+The data (name, gender, age, phone number, id number, vaccine) is stored in the new node. 
+The new node is added to the linked list.
+The append_node_to_file function is called.
+*/
 
 
 void insertnode_data(Node *person, char *filename){
@@ -320,6 +363,11 @@ void insertnode_data(Node *person, char *filename){
 }
 }
 
+/*
+This function appends the node data to the specified file.
+The fprintf function is used since the file is a text file.
+*/
+
 
 int append_node_to_file(Node *new_person, char *file){
   FILE *file_pointer=fopen(file,"a");
@@ -330,6 +378,17 @@ int append_node_to_file(Node *new_person, char *file){
   fclose(file_pointer);
   return 0;
 }
+
+
+/*
+This function searches through the database or the linked list, and it requires user interaction.
+The user is asked if they want to search by name, gender or by vaccine.
+For each type, the linked list is traversed.
+If the data is found, then that specific node data is printed.
+The function returns EXIT_SUCCESS if found and vice versa. 
+For example, the user wants to know all the individuals who got the Pfizer vaccine.
+This function would search for all nodes that have the Pfizer vaccine. 
+*/
 
 
 bool search_node_data(Node *person){
@@ -383,7 +442,7 @@ bool search_node_data(Node *person){
   }
 }
 
-
+// This function counts the number of nodes in the linked list.
 int list_nodes(Node *head){
   int  count=0;  
   while (head!=NULL){
@@ -561,6 +620,7 @@ return;
 }
 
 
+// This function checks if the length of the phone number and id number is within the specified range (10 digits).
 bool check_length(long pn,long idn){
 if ((pn<=MAX_PHONE_LENGTH) && (idn<=MAX_ID_LENGTH)){
    return EXIT_SUCCESS;
@@ -569,6 +629,11 @@ else {
   return EXIT_FAILURE;
 }
 }
+
+
+/* This function frees all the nodes of the linked list after the program terminates. 
+Even though the linked list is freed, all the changes the user makes are stored in the file. 
+*/
 
 
 void free_memory(Node *head) {
