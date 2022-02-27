@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 
-// Define constants (macros)
+// Define constants
 #define MAX_PHONE_LENGTH 9999999999
 #define MAX_ID_LENGTH 9999999999
 
@@ -58,6 +58,11 @@ int main(int argc,char ** argv){
     Node *individual=NULL;
     int result;
     int seconds=1;
+
+    /*if (argc!=3) {
+      return EXIT_FAILURE;
+    }*/
+
     result=access_system();
 
     while (result!=0){   
@@ -116,6 +121,7 @@ while (attempt!=3){
 }
 return EXIT_FAILURE;
 }
+
 
 // This function uses a for loop to create a time delay for 5 seconds after 3 unsuccessful login attempts. 
 void time_delay(int secs){
@@ -442,6 +448,7 @@ bool search_node_data(Node *person){
   }
 }
 
+
 // This function counts the number of nodes in the linked list.
 int list_nodes(Node *head){
   int  count=0;  
@@ -451,6 +458,15 @@ int list_nodes(Node *head){
  }
 return count;
 }
+
+
+/*
+This function creates a new linked list for all the individuals that are not vaccinated yet.
+The original linked list is traversed, and it searches for "None" in the vaccination status.
+When found, memory is allocated for that node.
+Later, all the nodes are linked together using pointers to create a new linked list.
+This function returns the head node of the new linked list.
+*/
 
 
 Node *none_vaccine_list(Node *head,int nc){
@@ -480,6 +496,15 @@ head=head->next;
 }
 return head_node;
 }
+
+
+/*
+This function uses a sorting algorithm (bubble sort) to create a priority list of all individuals who are not vaccinated.
+This function sorts with respect to the age of the individuals.
+The oldest person is assigned the highest priority.
+The second oldest person is assigned the second highest priority and so on. 
+This function returns the head of the list.
+*/
 
 
 Node *bubblesort_priority_person(Node *person){
@@ -528,6 +553,12 @@ return head;
 }
 
 
+/*
+This function writes the priority linked list to the specified file.
+The fprintf function is used since the file is a text file.
+*/
+
+
 void print_write_priority_file(Node *head,char *file){
   FILE *file_ptr=fopen(file,"w");
   printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n");
@@ -538,6 +569,15 @@ void print_write_priority_file(Node *head,char *file){
   }
   fclose(file_ptr);
 }
+
+
+/*
+This function updates the information for any individual in the database or linked list. (1. Phone Number 2. Vaccination 3. Both)
+The user enters the name of that person.
+The function traverses the linked list, and looks for the name in the linked list.
+If found, the data is updated and the operation is successful.
+Else it would not be updated and control would go back to the selection function.
+*/
 
 
 int update_info(Node *head){
@@ -594,6 +634,7 @@ int update_info(Node *head){
 }
 
 
+// This function deletes the head node and it returns the new head and the updated linked list. 
 Node *delete_head(Node *head) {
   Node *list_node=NULL;
   list_node=head;
@@ -601,6 +642,14 @@ Node *delete_head(Node *head) {
   free(list_node);
   return head;
 }
+
+
+/* This function deletes the linked list nodes except for the head.
+The linked list is traversed, and the node to delete (Let's refer to this as NTD) is assigned to another variable.
+The variable 'previous' keeps track of the previous node.
+The previous node of NTD points to the next node that comes after NTD.
+Then, the NTD is freed or deleted.
+*/
 
 
 void delete_after(Node *head,char *delete_name) {
