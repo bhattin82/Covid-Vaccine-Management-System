@@ -11,7 +11,8 @@
 // Define constants
 #define MAX_PHONE_LENGTH 9999999999
 #define MAX_ID_LENGTH 9999999999
-
+#define TRUE 1
+#define FALSE 0
 
 // Creating a linked list structure
 typedef struct linked_list{
@@ -38,6 +39,7 @@ Node *bubblesort_priority_person(Node *);
 int list_nodes(Node *);
 Node *none_vaccine_list(Node *,int);
 void print_write_priority_file(Node *,char *);
+void update_file(Node *,char *);
 int update_info(Node *);
 Node *delete_head(Node *);
 void delete_after(Node *,char *);
@@ -202,7 +204,8 @@ bool selection(Node *person, char *filename, char *filename2){
   int node_count=0;
   int head_remove_count=0;
   int other_remove_count=0;
-  printf("\nPlease Choose from the following:");
+
+  printf("\n\nPlease Choose from the following:");
   printf("\n1.Current Database 2.Add Record 3.Delete Record 4.Update Record 5.Search Record 6.Priority Individuals (Not vaccinated) 7.Log Out\n");
   printf("\nPlease enter your choice:");
   scanf("%s",choice);
@@ -214,7 +217,7 @@ bool selection(Node *person, char *filename, char *filename2){
 
   else if ((strcmp(choice,"2")==0)){
     insertnode_data(person,filename);
-    print_write_priority_file(person,filename2);
+    display_currentdata(person);
     selection(person,filename,filename2);
   }
 
@@ -225,33 +228,39 @@ bool selection(Node *person, char *filename, char *filename2){
     if (strcmp(person->name,delete_name)==0){
        new_node=delete_head(person); 
        if (head_remove_count!=node_count){
+         update_file(new_node,filename);
+         display_currentdata(new_node);
          printf("\nRecord Deleted!\n");
        }
        else{
         printf("\nRecord NOT found!\n");
        }
-
        selection(new_node,filename,filename2);
     }  
     else {
        delete_after(person,delete_name); 
        other_remove_count=list_nodes(person);
-     
+       
        if (other_remove_count!=node_count){
+         update_file(person,filename);
+         display_currentdata(person);
          printf("\nRecord Deleted!\n");
        }
        else{
         printf("\nRecord NOT found!\n");
        }
+      
        selection(person,filename,filename2); 
       }
   }
 
   else if ((strcmp(choice,"4")==0)){
+  
    found=update_info(person);
    if (found==0) {
       printf("\nRecord Updated!\n");
-      print_write_priority_file(person,filename2); 
+      display_currentdata(person);
+      update_file(person,filename);
    }
    else if (found==1) {
       printf("\nRECORD NOT FOUND!\n");
@@ -259,6 +268,7 @@ bool selection(Node *person, char *filename, char *filename2){
    else {
      printf("\nUnable to update due to invalid phone number(should be 10 digits)!\n");
    }
+
    selection(person,filename,filename2);
    }
  
@@ -274,9 +284,11 @@ bool selection(Node *person, char *filename, char *filename2){
   }
   
   else if ((strcmp(choice,"6")==0)){
+
    list_node=bubblesort_priority_person(person);
    print_write_priority_file(list_node,filename2);
    free_memory(list_node);
+
    selection(person,filename,filename2);
   }
  
@@ -304,10 +316,29 @@ The print statement uses width modifiers to arrange the data in an organized man
 void display_currentdata(Node *person){
  printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n"); 
  while (person!=NULL){
-    printf("\n%7s %4s %7d %13ld %13ld %7s\n",person->name,person->gender,person->age,person->phone_number,person->id_number,person->vaccine);      
+    printf("\n%7s %4s %7d %13ld %13ld %7s",person->name,person->gender,person->age,person->phone_number,person->id_number,person->vaccine);      
     person=person->next;
   }
 free(person);
+}
+
+
+/*
+This function updates the changes made by the user in the relevant files.
+It uses a while loop to traverse the linked list (terminates when reaches last node that has a null pointer).
+It prints the information (name, gender, age, phone number, id number, vaccine) for each node in the current linked list.
+*/
+
+
+void update_file(Node *person,char *filename){
+ FILE *file_pointer=fopen(filename,"w");
+ if (file_pointer!=NULL) {
+   while (person!=NULL){
+     fprintf(file_pointer,"%s %s %d %ld %ld %s\n",person->name,person->gender,person->age,person->phone_number,person->id_number,person->vaccine);
+     person=person->next;
+   }
+ }
+  fclose(file_pointer);
 }
 
 
@@ -563,9 +594,9 @@ void print_write_priority_file(Node *head,char *file){
   FILE *file_ptr=fopen(file,"w");
   printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n");
   while (head!=NULL){
-  printf("%7s %4s %7d %13ld %13ld %7s\n",head->name,head->gender,head->age,head->phone_number,head->id_number,head->vaccine);
-  fprintf(file_ptr,"%s %s %d %ld %ld %s\n",head->name,head->gender,head->age,head->phone_number,head->id_number,head->vaccine);
-  head=head->next;
+    printf("%7s %4s %7d %13ld %13ld %7s\n",head->name,head->gender,head->age,head->phone_number,head->id_number,head->vaccine);
+    fprintf(file_ptr,"%s %s %d %ld %ld %s\n",head->name,head->gender,head->age,head->phone_number,head->id_number,head->vaccine);
+    head=head->next;
   }
   fclose(file_ptr);
 }
