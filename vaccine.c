@@ -59,9 +59,9 @@ int main(int argc,char ** argv){
     int result;
     int seconds=1;
 
-    /*if (argc!=3) {
+    if (argc!=3) {
       return EXIT_FAILURE;
-    }*/
+    }
 
     result=access_system();
 
