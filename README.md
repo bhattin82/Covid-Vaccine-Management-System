@@ -29,13 +29,18 @@ Let us consider **another example**. Now, Mr Z. wants to inquire about the indiv
 
 Notice that the vaccination column is for **all those who did not receive any vaccine yet**. Also, it can be observed that the **oldest person has the highest priority and likewise**. Again, this output is just for the explanation. X can be any integer between 0 and 9 inclusive. 
 
+**Why I chose bubble sort?**
+
+Since my **file size** was extremely **small** (Lines <= 20), I preferred using bubble sort. Also, it is **simple** and **easy** to implement. However, if my **file size** was extremely **big** (Lines>=5000), then **bubble sort** was amongst the **worst sorting algorithms** to implement on an **unsorted list**. In that case, it has a **worst case** time complexity of **O(n^2)**. However, if the **list** is **already sorted**, **bubble sort** has a **best case** time complexity of **Ω(n)**. If I had an extremely **large file**, I would have either used **merge sort**, **heap sort** or **quick sort**. If I had to **pick one**, I would have implemented **merge sort**. I say so because **quick sort does not perform well** when the list is **already sorted**. **Quick sort** has a **worst case** time complexity of **O(n^2)**. **Merge sort** performs **fairly well** in both cases. It has a **worst, average, best case** time complexity of **O(nlog(n)), θ(nlog(n)) and Ω(nlog(n))** respectively.
+
+
 All the **changes** done by the user are **updated in the relevant file**.
 
 This program is **compiled** with the following commands:
-gcc vaccine.c
-./vaccination community_vaccine.txt priority.txt
+1) gcc -o vaccine vaccine.c
+2) ./vaccine community_vaccine.txt priority.txt
 
 This program performs **memory management**. It **does not leak any memory**. This can be tested with the following command: 
-valgrind --leak-check=yes ./vaccination community_vaccine.txt priority.txt
+valgrind --leak-check=yes ./vaccine community_vaccine.txt priority.txt
 
 Lastly, this project was worked on a **secure shell (ssh)** on a **linux platform**. 
