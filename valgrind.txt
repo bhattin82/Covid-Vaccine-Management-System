@@ -1,0 +1,38 @@
+First Input File (community_vaccine.txt)
+
+-bash-4.2$ valgrind --leak-check=yes ./vaccine community_vaccine.txt priority.txt
+==29011== Memcheck, a memory error detector
+==29011== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==29011== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==29011== Command: ./vaccine community_vaccine.txt priority.txt
+==29011== 
+
+==29011== 
+==29011== HEAP SUMMARY:
+==29011==     in use at exit: 0 bytes in 0 blocks
+==29011==   total heap usage: 19 allocs, 19 frees, 3,880 bytes allocated
+==29011== 
+==29011== All heap blocks were freed -- no leaks are possible
+==29011== 
+==29011== For lists of detected and suppressed errors, rerun with: -s
+==29011== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+Second Input File (community_data.txt)
+
+-bash-4.2$ valgrind --leak-check=yes ./vaccine community_data.txt priority.txt
+==20927== Memcheck, a memory error detector
+==20927== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==20927== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==20927== Command: ./vaccine community_data.txt priority.txt
+==20927== 
+
+==20927== 
+==20927== HEAP SUMMARY:
+==20927==     in use at exit: 0 bytes in 0 blocks
+==20927==   total heap usage: 22 allocs, 22 frees, 4,816 bytes allocated
+==20927== 
+==20927== All heap blocks were freed -- no leaks are possible
+==20927== 
+==20927== For lists of detected and suppressed errors, rerun with: -s
+==20927== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
