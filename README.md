@@ -37,7 +37,7 @@ Since my file size was extremely small (Lines <= 20), I preferred using bubble s
 All the changes done by the user are updated in the relevant file.
 
 This program is compiled with the following commands:
-1) gcc -o vaccine vaccine.c
+1) gcc vaccine.c -o vaccine
 2) ./vaccine community_vaccine.txt priority.txt
 
 This program performs memory management. It does not leak any memory. This can be tested with the following command: 
