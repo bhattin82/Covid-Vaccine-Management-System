@@ -7,7 +7,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 // Define constants
 #define MAX_PHONE_LENGTH 9999999999
 #define MAX_ID_LENGTH 9999999999
@@ -24,7 +23,6 @@ typedef struct linked_list{
     long id_number;
     struct linked_list *next;
 } Node;
-
 
 // Function Declarations 
 bool access_system();
@@ -46,50 +44,37 @@ void delete_after(Node *,char *);
 bool check_length(long,long);
 void free_memory(Node *);
 
-
 /*
 The main function calls the access_system function.
 If the access_system function returns 0, then the read_listfile function is called.
 The program calls the selection function that prints the user options.
 However, if the access system returns 1, the user has to wait for some time before the access_system function is called again.
 */
-
-
 int main(int argc,char ** argv){
-
     Node *individual=NULL;
     int result;
     int seconds=1;
-
     if (argc!=3) {
       return EXIT_FAILURE;
     }
-
     result=access_system();
-
     while (result!=0){   
       time_delay(seconds);
       result=access_system();
     }
-
     individual=read_listfile(argv[1]);
     bool output=selection(individual,argv[1],argv[2]);
-
     if (output==0) {
       printf("Success!\n");
     }
-    
     return 0;
 }
-
 
 /* This function has a pre-defined username and password.  
 If the correct credentials are entered, then the user is granted access (EXIT_SUCCESS).
 If not, then the user is given three attempts for a successful login.
 If all three attempts are unsuccessful, the program returns EXIT_FAILURE to the main function
 */
-
-
 bool access_system(){
 
 char correct_username[]="bhattin82";
@@ -103,27 +88,21 @@ while (attempt!=3){
    scanf("%s",entered_username);
    printf("Enter your password:");
    scanf("%s",entered_password);
-
    if (((strcmp(entered_username,correct_username))==0) && ((strcmp(entered_password,correct_password))==0)){
         printf("\n               Welcome to the Covid Vaccine Management System!                  \n");
       attempt=3;
-      return EXIT_SUCCESS;
-    
+      return EXIT_SUCCESS; 
    } 
-
-  else {
+   else {
       printf("Credentials are incorrect!\n");
       attempt++;
-
       if (attempt==2) {
          printf("\nThis is your last attempt!\n");
       }
-      
 }
 }
 return EXIT_FAILURE;
 }
-
 
 // This function uses a for loop to create a time delay for 5 seconds after 3 unsuccessful login attempts. 
 void time_delay(int secs){
@@ -133,7 +112,6 @@ void time_delay(int secs){
     printf("%d seconds\n",delay+1);
   }
 }
-
 
 /*
 This function opens the file in read mode.
@@ -146,8 +124,6 @@ Next, we create the linked list by linking all the nodes (e.g. A->B->C->D->E->NU
 The file is closed. 
 The head node is returned.
 */
-
-
 Node *read_listfile(char *filename){
  
    Node *head_node=NULL;
@@ -160,6 +136,7 @@ Node *read_listfile(char *filename){
    if (file_pointer==NULL) {
        return head_node;
    }
+    
    while (feof(file_pointer)!=1){   
      if (fscanf(file_pointer,"%s %s %d %ld %ld %s",information.name,information.gender,&information.age,&information.phone_number,&information.id_number,information.vaccine)!=EOF){
         person=(struct linked_list*)malloc(sizeof(Node)); 
@@ -184,7 +161,6 @@ fclose(file_pointer);
 return head_node;
 }
 
-
 /*
 This function requires the user to enter an option.
 The following operations can be performed:
@@ -193,8 +169,6 @@ Then, the relevant functions are called.
 If there is some error, this function will display that too.
 This function recursively calls itself until the user logs out.
 */
-
-
 bool selection(Node *person, char *filename, char *filename2){
   Node *list_node=NULL;
   char choice[50];
@@ -253,9 +227,7 @@ bool selection(Node *person, char *filename, char *filename2){
        selection(person,filename,filename2); 
       }
   }
-
   else if ((strcmp(choice,"4")==0)){
-  
    found=update_info(person);
    if (found==0) {
       printf("\nRecord Updated!\n");
@@ -268,10 +240,8 @@ bool selection(Node *person, char *filename, char *filename2){
    else {
      printf("\nUnable to update due to invalid phone number(should be 10 digits)!\n");
    }
-
    selection(person,filename,filename2);
    }
- 
   else if ((strcmp(choice,"5")==0)){
     found=search_node_data(person);
      if (found==0) {
@@ -282,16 +252,12 @@ bool selection(Node *person, char *filename, char *filename2){
     }  
    selection(person,filename,filename2);
   }
-  
   else if ((strcmp(choice,"6")==0)){
-
    list_node=bubblesort_priority_person(person);
    print_write_priority_file(list_node,filename2);
    free_memory(list_node);
-
    selection(person,filename,filename2);
   }
- 
   else if ((strcmp(choice,"7")==0)){
   free_memory(person);
   printf("\nLogged Out!\n");
@@ -304,15 +270,12 @@ bool selection(Node *person, char *filename, char *filename2){
 return EXIT_FAILURE;
 }
 
-
 /*
 This function displays the current database.
 It uses a while loop to traverse the linked list (terminates when reaches last node that has a null pointer).
 It prints the information (name, gender, age, phone number, id number, vaccine) for each node in the current linked list.
 The print statement uses width modifiers to arrange the data in an organized manner.
 */
-
-
 void display_currentdata(Node *person){
  printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n"); 
  while (person!=NULL){
@@ -322,14 +285,11 @@ void display_currentdata(Node *person){
 free(person);
 }
 
-
 /*
 This function updates the changes made by the user in the relevant files.
 It uses a while loop to traverse the linked list (terminates when reaches last node that has a null pointer).
 It prints the information (name, gender, age, phone number, id number, vaccine) for each node in the current linked list.
 */
-
-
 void update_file(Node *person,char *filename){
  FILE *file_pointer=fopen(filename,"w");
  if (file_pointer!=NULL) {
@@ -341,7 +301,6 @@ void update_file(Node *person,char *filename){
   fclose(file_pointer);
 }
 
-
 /*
 This function inserts a new node in the linked list, and it requires user interaction.
 It asks the user for a name, gender, age, phone number, id_number and vaccine. 
@@ -351,8 +310,6 @@ The data (name, gender, age, phone number, id number, vaccine) is stored in the 
 The new node is added to the linked list.
 The append_node_to_file function is called.
 */
-
-
 void insertnode_data(Node *person, char *filename){
   char Name[50];
   int Age;
@@ -404,8 +361,6 @@ void insertnode_data(Node *person, char *filename){
 This function appends the node data to the specified file.
 The fprintf function is used since the file is a text file.
 */
-
-
 int append_node_to_file(Node *new_person, char *file){
   FILE *file_pointer=fopen(file,"a");
   if (file_pointer==NULL){
@@ -416,7 +371,6 @@ int append_node_to_file(Node *new_person, char *file){
   return 0;
 }
 
-
 /*
 This function searches through the database or the linked list, and it requires user interaction.
 The user is asked if they want to search by name, gender or by vaccine.
@@ -426,8 +380,6 @@ The function returns EXIT_SUCCESS if found and vice versa.
 For example, the user wants to know all the individuals who got the Pfizer vaccine.
 This function would search for all nodes that have the Pfizer vaccine. 
 */
-
-
 bool search_node_data(Node *person){
   char search_name[50]="";
   char search_gender[50]="";
@@ -479,7 +431,6 @@ bool search_node_data(Node *person){
   }
 }
 
-
 // This function counts the number of nodes in the linked list.
 int list_nodes(Node *head){
   int  count=0;  
@@ -490,7 +441,6 @@ int list_nodes(Node *head){
 return count;
 }
 
-
 /*
 This function creates a new linked list for all the individuals that are not vaccinated yet.
 The original linked list is traversed, and it searches for "None" in the vaccination status.
@@ -498,8 +448,6 @@ When found, memory is allocated for that node.
 Later, all the nodes are linked together using pointers to create a new linked list.
 This function returns the head node of the new linked list.
 */
-
-
 Node *none_vaccine_list(Node *head,int nc){
 Node *copy_node=NULL;
 Node *current_node=NULL;
@@ -528,7 +476,6 @@ head=head->next;
 return head_node;
 }
 
-
 /*
 This function uses a sorting algorithm (bubble sort) to create a priority list of all individuals who are not vaccinated.
 This function sorts with respect to the age of the individuals.
@@ -536,8 +483,6 @@ The oldest person is assigned the highest priority.
 The second oldest person is assigned the second highest priority and so on. 
 This function returns the head of the list.
 */
-
-
 Node *bubblesort_priority_person(Node *person){
   int node_count=0;
   int node_c=0;
@@ -583,13 +528,10 @@ Node *bubblesort_priority_person(Node *person){
 return head; 
 }
 
-
 /*
 This function writes the priority linked list to the specified file.
 The fprintf function is used since the file is a text file.
 */
-
-
 void print_write_priority_file(Node *head,char *file){
   FILE *file_ptr=fopen(file,"w");
   printf("\n| Name | Gender | Age | Phone Number | Id Number | Vaccine |\n");
@@ -601,7 +543,6 @@ void print_write_priority_file(Node *head,char *file){
   fclose(file_ptr);
 }
 
-
 /*
 This function updates the information for any individual in the database or linked list. (1. Phone Number 2. Vaccination 3. Both)
 The user enters the name of that person.
@@ -609,8 +550,6 @@ The function traverses the linked list, and looks for the name in the linked lis
 If found, the data is updated and the operation is successful.
 Else it would not be updated and control would go back to the selection function.
 */
-
-
 int update_info(Node *head){
   long updated_number;
   char person_name[50];
@@ -664,7 +603,6 @@ int update_info(Node *head){
    }
 }
 
-
 // This function deletes the head node and it returns the new head and the updated linked list. 
 Node *delete_head(Node *head) {
   Node *list_node=NULL;
@@ -674,15 +612,12 @@ Node *delete_head(Node *head) {
   return head;
 }
 
-
 /* This function deletes the linked list nodes except for the head.
 The linked list is traversed, and the node to delete (Let's refer to this as NTD) is assigned to another variable.
 The variable 'previous' keeps track of the previous node.
 The previous node of NTD points to the next node that comes after NTD.
 Then, the NTD is freed or deleted.
 */
-
-
 void delete_after(Node *head,char *delete_name) {
    Node *previous=NULL;
    Node *list_node=NULL;
@@ -699,7 +634,6 @@ void delete_after(Node *head,char *delete_name) {
 return;
 }
 
-
 // This function checks if the length of the phone number and id number is within the specified range (10 digits).
 bool check_length(long pn,long idn){
 if ((pn<=MAX_PHONE_LENGTH) && (idn<=MAX_ID_LENGTH)){
@@ -710,12 +644,9 @@ else {
 }
 }
 
-
 /* This function frees all the nodes of the linked list after the program terminates. 
 Even though the linked list is freed, all the changes the user makes are stored in the file. 
 */
-
-
 void free_memory(Node *head) {
 Node *free_node=NULL; 
 while (head!=NULL){
