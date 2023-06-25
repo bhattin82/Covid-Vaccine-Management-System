@@ -42,5 +42,3 @@ This program is compiled with the following commands:
 
 This program performs memory management. It does not leak any memory. This can be tested with the following command: 
 valgrind --leak-check=yes ./vaccine community_vaccine.txt priority.txt
-
-Lastly, this project was worked on a secure shell (ssh). I used vim on my terminal. 
